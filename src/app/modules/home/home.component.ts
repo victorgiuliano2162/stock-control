@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserService } from './../../services/user/user.service';
-import { SignUpUserResponse } from 'src/models/interfaces/user/SignUpUserResponse';
 import { SignUpUserRequest } from 'src/models/interfaces/user/SignUpUserRequest';
 import { AuthRequest } from 'src/models/interfaces/user/auth/AuthRequest';
 import { CookieService } from 'ngx-cookie-service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-home',
@@ -29,11 +29,13 @@ export class HomeComponent {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private cookieService: CookieService,  
+    private cookieService: CookieService,
+    private messageService: MessageService  
   ) {
     //Para utilizá-lo é preciso importar o ReativeFormsModule no app.module.ts
   }
 
+  //Loga usuário
   onSubmitLoginForm(): void {
     if(this.loginForm.value && this.loginForm.valid){
       this.userService.authUser(
@@ -42,15 +44,31 @@ export class HomeComponent {
         next: (response) => {
           if(response){
             this.cookieService.set("USER_INFO", response?.token);
-            
-            this.loginForm.reset(); 
+            this.loginForm.reset();
+
+            this.messageService.add({
+              severity: "success",
+              summary: "Sucesso",
+              detail: `Bem vindo de volta ${response?.name}`,
+              life: 2000,
+            })
           }
         },
-        error: (err) => console.log(err)
+        error: (err) => {
+          
+          this.messageService.add({
+            severity: "error",
+            summary: "Erro",
+            detail: `Erro ao realizar login`,
+            life: 2000,
+          });
+
+          console.log(err)}
       })
     }
   }
 
+  //Cria usuário
   onSubmitSignUpForm(): void {
     if(this.signUpForm.value && this.signUpForm.valid) {
       this.userService.signUpUser(
@@ -58,12 +76,27 @@ export class HomeComponent {
       ).subscribe({
         next: (response) => {
           if(response) {
-            alert("Teste - Usuário criado com sucesso");
+            this.messageService.add({
+              severity: "success",
+              summary: "Sucesso",
+              detail: `Seja bem vindo ${this.signUpForm.value.name}. Efetue login para acessar seu cadastro`,
+              life: 2000,
+            })
             this.signUpForm.reset();
             this.loginCard = true;
           }
         },
-        error: (err) => console.log("Teste - Erro na criação do usuário", err)
+        error: (err) => {
+          
+          this.messageService.add({
+            severity: "error",
+            summary: "Erro",
+            detail: `Impossível realizar cadastro`,
+            life: 2000,
+          });
+
+          console.log(err);
+        }
       })
     }
   }
