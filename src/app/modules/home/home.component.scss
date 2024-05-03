@@ -11,3 +11,15 @@
         background-position: top;
     };
 }
+/* 
+Adiciona responsividade em telas menores
+*/
+
+@media screen and (max-width: 1000px) {
+    .grid {
+        height: 100vmax;
+    }
+}
+/* 
+Adiciona responsividade em telas maior
+*/
