@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './modules/home/home.component';
 import { DashboadHomeComponent } from './modules/dashboard/page/dashboad-home/dashboad-home.component';
+import { AuthGuard } from './guards/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
     path: 'dashboard',
     //implementação do lazy loading
     loadChildren: () => import('./modules/dashboard/dashboard.module').then((m) => m.DashboardModule),
+    canActivate: [AuthGuard],
   }
 ];
 
