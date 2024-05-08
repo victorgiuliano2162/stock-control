@@ -17,7 +17,9 @@ const routes: Routes = [
   {
     path: 'dashboard',
     //implementação do lazy loading
-    loadChildren: () => import('./modules/dashboard/dashboard.module').then((m) => m.DashboardModule),
+    loadChildren: () => import('./modules/dashboard/dashboard.module').then(
+      (m) => m.DashboardModule
+    ),
     canActivate: [AuthGuard],
   }
 ];
